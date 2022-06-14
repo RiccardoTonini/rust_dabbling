@@ -1,4 +1,36 @@
+use std::str::FromStr;
+use std::env;
+
 fn main() {
+    let mut numbers = Vec::new();
+
+    for arg in env::args().skip(1) {
+        let error_msg = format!("Error parsing arg. Expecting an uint but got {arg}.", arg=arg);
+        numbers.push(
+            u64::from_str(&arg).expect(&error_msg)
+        );
+    }
+
+    if numbers.len() == 0 {
+        eprintln!("Usage: gcd NUMBER ...");
+        std::process::exit(1);
+    }
+
+    let mut gcd = numbers[0];
+    for n in &numbers[1..] {
+        gcd = greatest_common_divisor(gcd, *n)
+    }
+
+    println!(
+        "The greatest common divisor of {:?} is {}",
+        numbers,
+        gcd,
+    );
+
+}
+
+
+fn main2() {
     println!("Hello, world!");
     let n = 1000;
     let m = 950;
@@ -8,6 +40,8 @@ fn main() {
     let gcd_msg = format!("------ gcd is {gcd} -----------", gcd=gcd);
     println!("{}", gcd_msg);
 }
+
+
 
 fn greatest_common_divisor(mut n: u64, mut m: u64) -> u64 {
     assert!(n != 0 && m != 0);
@@ -46,7 +80,6 @@ fn test_greatest_common_divisor_zero_n(){
     greatest_common_divisor(test_n, test_m);
 
 }
-
 
 #[test]
 #[should_panic]
